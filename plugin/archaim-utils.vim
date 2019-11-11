@@ -2,11 +2,71 @@ map <Leader>ar :Ar
 map <Leader>Ar viwy:Ar <C-r>" 
 nnoremap <F2> :call ARCHaimPythonCleanImportLine()<cr>
 
+
+execute "set <M-k>=\ek"
+execute "set <M-j>=\ej"
+nnoremap <silent> <M-k> :Amlu(v:count)<cr>==
+nnoremap <silent> <M-j> :Amld(v:count)<cr>==
+inoremap <silent> <M-k> <c-o>:Amlu(v:count)<cr>==
+inoremap <silent> <M-j> <c-o>:Amld(v:count)<cr>==
+vnoremap <silent> <M-k> :'<,'>Ambu(v:count)<cr>gv
+vnoremap <silent> <M-j> :'<,'>Ambd(v:count)<cr>gv
+
 let g:au_rr_exclude_files = ".*.sw*"
 let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir=,CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn"
 
 
 " {{{ FOLDING
+
+
+function! ARCHaimMoveLineUp(count) range
+  if (a:count == 0)
+    let l:count = 1
+  else
+    let l:count = a:count
+  endif
+
+  if (line('.') - l:count < 1)
+    return
+  endif
+
+  let l:lines_to_move = l:count + 1
+  exec ":m .-" . l:lines_to_move . "<cr>"
+endfunction
+
+
+function! ARCHaimMoveLineDown(count) range
+  if (a:count == 0)
+    let l:count = 1
+  else
+    let l:count = a:count
+  endif
+
+  exec ":m .+" . l:count . "<cr>"
+endfunction
+
+
+function! ARCHaimMoveBlockUp(count) range
+  if (a:count == 0)
+    let l:count = 1
+  else
+    let l:count = a:count
+  endif
+
+  let l:lines_to_move = l:count + 1
+  exec ":'<,'>m '<-" . l:lines_to_move
+endfunction
+
+
+function! ARCHaimMoveBlockDown(count) range
+  if (a:count == 0)
+    let l:count = 1
+  else
+    let l:count = a:count
+  endif
+
+  exec ":'<,'>m '>+" . l:count
+endfunction
 
 
 function! ARCHaimReplaceRecurively(pattern_to_replace, pattern_replace_with)
@@ -62,6 +122,10 @@ endfunction
 
 
 command! -nargs=* Ar call ARCHaimReplaceRecurively(<f-args>)
+command! -nargs=1 -range Amlu  <line1>,<line2>call ARCHaimMoveLineUp(<args>)
+command! -nargs=1 -range Amld <line1>,<line2>call ARCHaimMoveLineDown(<args>)
+command! -nargs=1 -range Ambu <line1>,<line2>call ARCHaimMoveBlockUp(<args>)
+command! -nargs=1 -range Ambd <line1>,<line2>call ARCHaimMoveBlockDown(<args>)
 
 
 " }}}
