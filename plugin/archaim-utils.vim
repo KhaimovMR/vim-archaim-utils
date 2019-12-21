@@ -19,6 +19,19 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 " {{{ FOLDING
 
 
+function! ARCHaimFZFExcludeBuffers()
+  let l:fzf_extra_parameters = ''
+
+  for i in filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    if (bufname(i) != '')
+      let l:fzf_extra_parameters .= ' ! -path "./' . bufname(i) . '"'
+    endif
+  endfor
+
+  let $FZF_EXTRA_PARAMETERS = l:fzf_extra_parameters
+endfunction
+
+
 function! ARCHaimMoveLineUp(count) range
   if (a:count == 0)
     let l:count = 1
