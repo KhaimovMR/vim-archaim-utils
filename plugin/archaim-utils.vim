@@ -2,9 +2,11 @@ map <Leader>ar :Ar
 map <Leader>Ar viwy:Ar <C-r>" 
 nnoremap <F2> :call ARCHaimPythonCleanImportLine()<cr>
 
+if !has('nvim')
+  execute "set <M-k>=\ek"
+  execute "set <M-j>=\ej"
+endif
 
-execute "set <M-k>=\ek"
-execute "set <M-j>=\ej"
 nnoremap <silent> <M-k> :Amlu(v:count)<cr>==
 nnoremap <silent> <M-j> :Amld(v:count)<cr>==
 inoremap <silent> <M-k> <c-o>:Amlu(v:count)<cr>==
