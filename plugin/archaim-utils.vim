@@ -11,6 +11,8 @@ nnoremap <silent> <M-k> :Amlu(v:count)<cr>==
 nnoremap <silent> <M-j> :Amld(v:count)<cr>==
 inoremap <silent> <M-k> <c-o>:Amlu(v:count)<cr>==
 inoremap <silent> <M-j> <c-o>:Amld(v:count)<cr>==
+inoremap <silent> <c-j> <c-o>:call ARCHaimMoveWordBackwards()<cr>
+inoremap <silent> <c-k> <c-o>:call ARCHaimMoveWordForward()<cr>
 vnoremap <silent> <M-k> :'<,'>Ambu(v:count)<cr>gv
 vnoremap <silent> <M-j> :'<,'>Ambd(v:count)<cr>gv
 
@@ -126,6 +128,24 @@ function! ARCHaimPythonCleanImportLine()
     endif
 
     exec ":" . string(l:open_import_line + 1) . "," . string(l:closing_import_line - 1) . "sort u"
+  endif
+endfunction
+
+
+function! ARCHaimMoveWordForward()
+  let l:char = getline('.')[col('.') - 1]
+
+  if (l:char == ')' || l:char == ']' || l:char == '}')
+    silent! exec "normal xep"
+  endif
+endfunction
+
+
+function! ARCHaimMoveWordBackwards()
+  let l:char = getline('.')[col('.') - 1]
+
+  if (l:char == ')' || l:char == ']' || l:char == '}')
+    silent! exec "normal xbP"
   endif
 endfunction
 
