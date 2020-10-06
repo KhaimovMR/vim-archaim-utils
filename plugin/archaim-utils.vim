@@ -13,6 +13,8 @@ inoremap <silent> <M-k> <c-o>:Amlu(v:count)<cr>==
 inoremap <silent> <M-j> <c-o>:Amld(v:count)<cr>==
 inoremap <silent> <c-j> <c-o>:call ARCHaimMoveWordBackwards()<cr>
 inoremap <silent> <c-k> <c-o>:call ARCHaimMoveWordForward()<cr>
+nnoremap <silent> <c-j> :call ARCHaimMoveWordBackwards()<cr>
+nnoremap <silent> <c-k> :call ARCHaimMoveWordForward()<cr>
 vnoremap <silent> <M-k> :'<,'>Ambu(v:count)<cr>gv
 vnoremap <silent> <M-j> :'<,'>Ambd(v:count)<cr>gv
 
@@ -137,6 +139,14 @@ function! ARCHaimMoveWordForward()
 
   if (l:char == ')' || l:char == ']' || l:char == '}')
     silent! exec "normal xep"
+  else
+    let l:line_from_cursor = getline('.')[col('.') - 1:col('$')]
+
+    if (match(l:line_from_cursor, '^\w\+, ') == -1)
+      return
+    endif
+
+    silent! exec 'normal f xwPF,hdiwelpF,xt pe'
   endif
 endfunction
 
@@ -146,6 +156,14 @@ function! ARCHaimMoveWordBackwards()
 
   if (l:char == ')' || l:char == ']' || l:char == '}')
     silent! exec "normal xbP"
+  else
+    let l:line_before_cursor = getline('.')[0:col('.') - 1]
+
+    if (match(l:line_before_cursor, ', \w\+$') == -1)
+      return
+    endif
+
+    silent! exec 'normal F xbbPf,ldiwbbhPf,xF Pb'
   endif
 endfunction
 
