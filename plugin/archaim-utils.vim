@@ -28,6 +28,10 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 function! ARCHaimFZFExcludeBuffers()
   let l:fzf_extra_parameters = ''
 
+  if exists('g:archaim_fzf_extra_parameters')
+    let l:fzf_extra_parameters .= g:archaim_fzf_extra_parameters
+  endif
+
   for i in filter(range(1, bufnr('$')), 'buflisted(v:val)')
     if (bufname(i) != '')
       let l:fzf_extra_parameters .= ' ! -path "./' . bufname(i) . '"'
