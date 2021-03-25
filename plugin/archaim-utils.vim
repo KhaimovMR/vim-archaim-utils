@@ -25,7 +25,7 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 " {{{ FOLDING
 
 
-function! ARCHaimFZFExcludeBuffers()
+function! ARCHaimFZFExcludes()
   let l:fzf_extra_parameters = ''
 
   if exists('g:archaim_fzf_extra_parameters')
@@ -36,6 +36,16 @@ function! ARCHaimFZFExcludeBuffers()
     if (bufname(i) != '')
       let l:fzf_extra_parameters .= ' ! -path "./' . bufname(i) . '"'
     endif
+  endfor
+
+  let s:gitignore_global_lines = readfile($HOME . '/.gitignore_global')
+
+  for s:line in s:gitignore_global_lines
+    if (s:line == '' || s:line[0] == '#')
+      continue
+    endif
+
+    let l:fzf_extra_parameters .= ' ! -path "./' . s:line . '"'
   endfor
 
   let $FZF_EXTRA_PARAMETERS = l:fzf_extra_parameters
