@@ -38,15 +38,19 @@ function! ARCHaimFZFExcludes()
     endif
   endfor
 
-  let s:gitignore_global_lines = readfile($HOME . '/.gitignore_global')
+  let l:gitignore_global_path = $HOME . '/.gitignore_global'
 
-  for s:line in s:gitignore_global_lines
-    if (s:line == '' || s:line[0] == '#')
-      continue
-    endif
+  if filereadable(l:gitignore_global_path)
+    let s:gitignore_global_lines = readfile($HOME . '/.gitignore_global')
 
-    let l:fzf_extra_parameters .= ' ! -path "./' . s:line . '"'
-  endfor
+    for s:line in s:gitignore_global_lines
+      if (s:line == '' || s:line[0] == '#')
+        continue
+      endif
+
+      let l:fzf_extra_parameters .= ' ! -path "./' . s:line . '"'
+    endfor
+  endif
 
   let $FZF_EXTRA_PARAMETERS = l:fzf_extra_parameters
 endfunction
