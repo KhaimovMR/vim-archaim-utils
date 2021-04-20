@@ -25,6 +25,26 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 " {{{ FOLDING
 
 
+function! ARCHaimFZFAg(query)
+  let l:ag_extra_parameters = ''
+  let l:gitignore_global_path = $HOME . '/.gitignore_global'
+
+  if filereadable(l:gitignore_global_path)
+    let s:gitignore_global_lines = readfile($HOME . '/.gitignore_global')
+
+    for s:line in s:gitignore_global_lines
+      if (s:line == '' || s:line[0] == '#')
+        continue
+      endif
+
+      let l:ag_extra_parameters .= ' --ignore "./' . s:line . '"'
+    endfor
+  endif
+
+  call fzf#vim#ag(a:query, l:ag_extra_parameters, {'options': '--delimiter : --nth 4.. --reverse'})
+endfunction
+
+
 function! ARCHaimFZFExcludes()
   let l:fzf_extra_parameters = ''
 
