@@ -47,6 +47,11 @@ endfunction
 
 function! ARCHaimFZFExcludes()
   let l:fzf_extra_parameters = ''
+  let l:exclude_arg_name = ' ! -path '
+
+  if (match($FZF_DEFAULT_COMMAND, ' fd ') > -1)
+    let l:exclude_arg_name = ' -E '
+  endif
 
   if exists('g:archaim_fzf_extra_parameters')
     let l:fzf_extra_parameters .= g:archaim_fzf_extra_parameters
@@ -54,7 +59,7 @@ function! ARCHaimFZFExcludes()
 
   for i in filter(range(1, bufnr('$')), 'buflisted(v:val)')
     if (bufname(i) != '')
-      let l:fzf_extra_parameters .= ' ! -path "./' . bufname(i) . '"'
+      let l:fzf_extra_parameters .= l:exclude_arg_name . '"./' . bufname(i) . '"'
     endif
   endfor
 
@@ -68,7 +73,7 @@ function! ARCHaimFZFExcludes()
         continue
       endif
 
-      let l:fzf_extra_parameters .= ' ! -path "./' . s:line . '"'
+      let l:fzf_extra_parameters .= l:exclude_arg_name . '"./' . s:line . '"'
     endfor
   endif
 
