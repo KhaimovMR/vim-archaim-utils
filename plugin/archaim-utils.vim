@@ -1,6 +1,7 @@
 map <Leader>ar :Ar 
 map <Leader>Ar viwy:Ar <C-r>" 
-nnoremap <F2> :call ARCHaimPythonCleanImportLine()<cr>
+nnoremap <F2> :CocCommand pyright.organizeimports<cr>
+nnoremap <F4> :call <SID>ARCHaimCurrentLineHighlight()<CR>
 
 if !has('nvim')
   execute "set <M-k>=\ek"
@@ -208,6 +209,14 @@ function! ARCHaimMoveWordBackwards()
 
     silent! exec 'normal F xbbPf,ldiwbbhPf,xF Pb'
   endif
+endfunction
+
+
+function! <SID>ARCHaimCurrentLineHighlight()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunction
 
 
