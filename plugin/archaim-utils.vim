@@ -18,6 +18,12 @@ nnoremap <silent> <c-j> :call ARCHaimMoveWordBackwards()<cr>
 nnoremap <silent> <c-k> :call ARCHaimMoveWordForward()<cr>
 vnoremap <silent> <M-k> :'<,'>Ambu(v:count)<cr>gv
 vnoremap <silent> <M-j> :'<,'>Ambd(v:count)<cr>gv
+inoremap <tab> <c-o>:Aimti<cr>
+inoremap <s-tab> <c-o>:Aimtu<cr>
+nnoremap <tab> :Aimti<cr>
+nnoremap <s-tab> :Aimtu<cr>
+vnoremap <tab> >
+vnoremap <s-tab> <
 
 let g:au_rr_exclude_files = ".*.sw*"
 let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir=,CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn"
@@ -213,10 +219,30 @@ endfunction
 
 
 function! <SID>ARCHaimCurrentLineHighlight()
-    if !exists("*synstack")
-        return
-    endif
-    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunction
+
+
+function! ARCHaimIModeTabIndent()
+  let l:new_position = col('.') + shiftwidth()
+  silent! exec 'normal >>'
+  echom l:new_position
+  call cursor(line('.'), l:new_position)
+endfunction
+
+
+function! ARCHaimIModeTabUnindent()
+  let l:new_position = col('.') - shiftwidth()
+
+  if l:new_position < 0
+    let l:new_position = 0
+  endif
+  silent! exec 'normal <<'
+  echom l:new_position
+  call cursor(line('.'), l:new_position)
 endfunction
 
 
@@ -231,6 +257,8 @@ command! -nargs=1 -range Amlu  <line1>,<line2>call ARCHaimMoveLineUp(<args>)
 command! -nargs=1 -range Amld <line1>,<line2>call ARCHaimMoveLineDown(<args>)
 command! -nargs=1 -range Ambu <line1>,<line2>call ARCHaimMoveBlockUp(<args>)
 command! -nargs=1 -range Ambd <line1>,<line2>call ARCHaimMoveBlockDown(<args>)
+command! -nargs=0 Aimti call ARCHaimIModeTabIndent()
+command! -nargs=0 Aimtu call ARCHaimIModeTabUnindent()
 
 
 " }}}
