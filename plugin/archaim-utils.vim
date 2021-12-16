@@ -22,8 +22,8 @@ inoremap <tab> <c-o>:Aimti<cr>
 inoremap <s-tab> <c-o>:Aimtu<cr>
 nnoremap <tab> :Aimti<cr>
 nnoremap <s-tab> :Aimtu<cr>
-vnoremap <tab> >
-vnoremap <s-tab> <
+vnoremap <tab> >gv
+vnoremap <s-tab> <gv
 
 let g:au_rr_exclude_files = ".*.sw*"
 let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir=,CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn"
@@ -226,9 +226,34 @@ function! <SID>ARCHaimCurrentLineHighlight()
 endfunction
 
 
+function! ARCHaimGetIndentString()
+    let l:indent = ''
+
+    if &expandtab
+      let l:current_indent_size = 0
+
+      while  l:current_indent_size < &shiftwidth
+        let l:indent .= ' '
+        let l:current_indent_size += 1
+      endwhile
+    else
+      let l:indent = "\t"
+    endif
+
+    return l:indent
+endfunction
+
+
 function! ARCHaimIModeTabIndent()
   let l:new_position = col('.') + shiftwidth()
-  silent! exec 'normal >>'
+  let l:line=getline('.')
+
+  if getline('.') == ''
+    call setline('.', ARCHaimGetIndentString())
+  else
+    silent! exec 'normal >>'
+  endif
+
   echom l:new_position
   call cursor(line('.'), l:new_position)
 endfunction
