@@ -1,5 +1,11 @@
-map <Leader>ar :Ar 
-map <Leader>Ar viwy:Ar <C-r>" 
+"map <Leader>ar :Ar 
+nnoremap <leader>a :Ag '' -U<cr>
+nnoremap <Leader>A viwy:Ag <C-r>" -U
+nnoremap <m-a> :Ag<cr>
+inoremap <m-a> :Ag<cr>
+nnoremap <m-A> viwy?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
+inoremap <m-A> <c-c>viwy?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
+vnoremap <m-A> y?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
 nnoremap <F2> :CocCommand pyright.organizeimports<cr>
 nnoremap <F4> :call <SID>ARCHaimCurrentLineHighlight()<CR>
 
@@ -33,7 +39,12 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 
 
 function! ARCHaimFZFAg(query)
-  let l:ag_extra_parameters = ''
+  let l:ag_extra_parameters = '-f' 
+
+  if a:extra_parameters
+    let l:ag_extra_parameters .= ' ' . a:extra_parameters
+  endif
+
   let l:gitignore_global_path = $HOME . '/.gitignore_global'
 
   if filereadable(l:gitignore_global_path)
@@ -284,6 +295,7 @@ command! -nargs=1 -range Ambu <line1>,<line2>call ARCHaimMoveBlockUp(<args>)
 command! -nargs=1 -range Ambd <line1>,<line2>call ARCHaimMoveBlockDown(<args>)
 command! -nargs=0 Aimti call ARCHaimIModeTabIndent()
 command! -nargs=0 Aimtu call ARCHaimIModeTabUnindent()
+command! -bang -nargs=* Ag call ARCHaimFZFAg(<q-args>)
 
 
 " }}}
