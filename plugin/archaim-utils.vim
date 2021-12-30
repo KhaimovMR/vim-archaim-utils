@@ -41,8 +41,8 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 function! ARCHaimFZFAg(query)
   let l:ag_extra_parameters = '-f' 
 
-  if a:extra_parameters
-    let l:ag_extra_parameters .= ' ' . a:extra_parameters
+  if exists("g:archaim_fzf_ag_extra_parameters")
+    let l:ag_extra_parameters .= ' ' . g:archaim_fzf_ag_extra_parameters
   endif
 
   let l:gitignore_global_path = $HOME . '/.gitignore_global'
