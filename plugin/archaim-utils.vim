@@ -1,4 +1,3 @@
-"map <Leader>ar :Ar 
 nnoremap <leader>a :Ag '' -U<cr>
 nnoremap <Leader>A viwy:Ag <C-r>" -U
 nnoremap <m-a> :Ag<cr>
@@ -6,8 +5,8 @@ inoremap <m-a> :Ag<cr>
 nnoremap <m-A> viwy?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
 inoremap <m-A> <c-c>viwy?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
 vnoremap <m-A> y?<c-r>"<cr><c-c>/<c-r>"<cr><c-c>:Ag <c-r>"<cr>
-nnoremap <F2> :CocCommand pyright.organizeimports<cr>
-nnoremap <F4> :call <SID>ARCHaimCurrentLineHighlight()<CR>
+nnoremap <f2> :CocCommand pyright.organizeimports<cr>
+nnoremap <f4> :call <SID>ARCHaimCurrentLineHighlight()<CR>
 
 if !has('nvim')
   execute "set <M-k>=\ek"
@@ -230,10 +229,15 @@ endfunction
 
 
 function! <SID>ARCHaimCurrentLineHighlight()
-  if !exists("*synstack")
-    return
+  " check if nvim-treesitter is enabled
+  if (exists(':TSHighlightCapturesUnderCursor') == 2)
+    silent! exec ':TSHighlightCapturesUnderCursor'
+  else
+    if !exists("*synstack")
+      return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
   endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunction
 
 
