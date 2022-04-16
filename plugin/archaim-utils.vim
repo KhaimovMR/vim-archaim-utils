@@ -38,7 +38,7 @@ let g:au_rr_exclude_dirs = "--exclude-dir=.idea --exclude-dir=.bzr --exclude-dir
 
 
 function! ARCHaimFZFAg(query)
-  let l:ag_extra_parameters = '-f' 
+  let l:ag_extra_parameters = '-f'
 
   if exists("g:archaim_fzf_ag_extra_parameters")
     let l:ag_extra_parameters .= ' ' . g:archaim_fzf_ag_extra_parameters
@@ -198,7 +198,7 @@ function! ARCHaimMoveWordForward()
   let l:char = getline('.')[col('.') - 1]
 
   if (l:char == ')' || l:char == ']' || l:char == '}')
-    silent! exec "normal xep"
+    call ARCHaimGetNextCursorPositionMovementForward()
   else
     let l:line_from_cursor = getline('.')[col('.') - 1:col('$')]
 
@@ -208,6 +208,54 @@ function! ARCHaimMoveWordForward()
 
     silent! exec 'normal f xwPF,hdiwelpF,xt pe'
   endif
+endfunction
+
+
+" ).next_.
+" .)next_.
+" .n)ext_.
+" .next)_.
+" .next_).
+" .next_.)
+" ..).asdf
+" ..)asdfasdf.
+function! Abssd()
+endfunction
+
+function! ARCHaimGetNextCursorPositionMovementForward()
+  let l:original_position = col('.')
+  silent! execute "normal x"
+  let l:current_line = getline('.')
+  let l:current_line_length = len(l:current_line)
+  let l:original_line_length = len(l:current_line) + 1
+  let l:line_from_cursor = l:current_line[col('.') - 1:col('$')]
+  let l:current_position = col('.')
+  let l:current_character = l:current_line[col('.') - 1]
+  let l:special_symbols_pattern = '[\(\)<>\[\];:,.`~=+*&^$% \t''@#"!\r-]'
+  let l:matched_position = match(l:line_from_cursor, l:special_symbols_pattern)
+  let l:next_position = l:matched_position + l:current_position
+  let l:l_movements_amount = 1
+  let l:previous_character_position = col('.') - 1
+  let l:previous_character_is_special_symbol = match(l:current_line[l:previous_character_position - 1], l:special_symbols_pattern)
+
+  if ((l:previous_character_position == 0 || l:previous_character_is_special_symbol == 0) && match(l:line_from_cursor, '[a-zA-Z0-9_]') == 0)
+    let l:l_movements_amount = 0
+  end
+
+  if (l:original_position == l:original_line_length || l:matched_position == -1)
+    " the moving character was at the end of the line
+    silent! execute "normal ep"
+    return
+  end
+
+  if (l:current_position == l:current_line_length)
+    silent! execute "normal $p"
+    return
+  else
+    let l:cmd = "normal " . string(l:matched_position + l:l_movements_amount) . "lP"
+    silent! execute l:cmd
+    return
+  end
 endfunction
 
 
