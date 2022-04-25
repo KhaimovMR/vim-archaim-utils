@@ -219,6 +219,8 @@ endfunction
 " .next_.)
 " ..).asdf
 " ..)asdfasdf.
+" {}asdf   fdfsaf
+" {}fsdfas.sdfasdf
 function! Abssd()
 endfunction
 
@@ -231,10 +233,10 @@ function! ARCHaimGetNextCursorPositionMovementForward()
   let l:line_from_cursor = l:current_line[col('.') - 1:col('$')]
   let l:current_position = col('.')
   let l:current_character = l:current_line[col('.') - 1]
-  let l:special_symbols_pattern = '[\(\)<>\[\];:,.`~=+*&^$% \t''@#"!\r-]'
+  let l:special_symbols_pattern = '[\(\)<>\[\];:,.`~=+*&^$% \t''@#"!\r\{\}-]'
   let l:matched_position = match(l:line_from_cursor, l:special_symbols_pattern)
   let l:next_position = l:matched_position + l:current_position
-  let l:l_movements_amount = 1
+  let l:l_movements_amount = 0
   let l:previous_character_position = col('.') - 1
   let l:previous_character_is_special_symbol = match(l:current_line[l:previous_character_position - 1], l:special_symbols_pattern)
 
@@ -252,7 +254,13 @@ function! ARCHaimGetNextCursorPositionMovementForward()
     silent! execute "normal $p"
     return
   else
-    let l:cmd = "normal " . string(l:matched_position + l:l_movements_amount) . "lP"
+    if (l:matched_position > 0)
+      let l:movements = string(l:matched_position) . "l"
+    else
+      let l:movements = "l"
+    end
+
+    let l:cmd = "normal " . l:movements . "P"
     silent! execute l:cmd
     return
   end
