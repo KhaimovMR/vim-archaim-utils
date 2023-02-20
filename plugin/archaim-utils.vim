@@ -17,14 +17,16 @@ nnoremap <silent> <M-k> :Amlu(v:count)<cr>==
 nnoremap <silent> <M-j> :Amld(v:count)<cr>==
 inoremap <silent> <M-k> <c-o>:Amlu(v:count)<cr>==
 inoremap <silent> <M-j> <c-o>:Amld(v:count)<cr>==
-inoremap <silent> <c-j> <c-o>:call ARCHaimMoveWordBackwards()<cr>
-inoremap <silent> <c-k> <c-o>:call ARCHaimMoveWordForward()<cr>
+inoremap <silent><expr> <c-j> coc#pum#visible() ? coc#pum#next(1) : "\<c-o>:call ARCHaimMoveWordBackwards()<cr>"
+inoremap <silent><expr> <c-k> coc#pum#visible() ? coc#pum#prev(1) : "\<c-o>:call ARCHaimMoveWordForward()<cr>"
 nnoremap <silent> <c-j> :call ARCHaimMoveWordBackwards()<cr>
 nnoremap <silent> <c-k> :call ARCHaimMoveWordForward()<cr>
 vnoremap <silent> <M-k> :'<,'>Ambu(v:count)<cr>gv
 vnoremap <silent> <M-j> :'<,'>Ambd(v:count)<cr>gv
 inoremap <tab> <c-o>:Aimti<cr>
-inoremap <s-tab> <c-o>:Aimtu<cr>
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<c-o>:call AutoPairsReturn()<cr>"
+inoremap <silent><expr> <tab> coc#pum#visible() ? coc#pum#next(1) : "\<c-o>:call ARCHaimIModeTabIndent()<cr>"
+inoremap <silent><expr> <s-tab> coc#pum#visible() ? coc#pum#prev(1) : "\<c-o>:call ARCHaimIModeTabUnindent()<cr>"
 nnoremap <tab> :Aimti<cr>
 nnoremap <s-tab> :Aimtu<cr>
 vnoremap <tab> >gv
